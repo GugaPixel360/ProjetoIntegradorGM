@@ -1,6 +1,10 @@
-namespace PiEf.Models;
+using PiEf.Data;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace PiEf.Models;
+
+
 
 public class Animal
 {
@@ -27,6 +31,23 @@ public class Animal
         Idade = idade;
         Sexo = sexo;
     }
+
+   public static async Task<List<Animal>> ListarAnimaisDisponiveis()
+    {
+        await using var db = new AppDbContext();
+
+        return await db.Animais
+            .Where(a => a.Disponivel)
+            .ToListAsync();
+    }
+
+
+
+
+
+
+
+
 }
 
 
