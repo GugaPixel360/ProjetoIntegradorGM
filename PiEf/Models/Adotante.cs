@@ -8,7 +8,7 @@ public class Adotante
      public Adotante(string nome, int idade, string email)
     {
         Nome = nome;
-        Idade = Idade;
+        Idade = idade;
         Email = email;
     }
 }
