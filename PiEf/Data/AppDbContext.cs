@@ -9,6 +9,7 @@ namespace PiEf.Data;
 public class AppDbContext : DbContext
 {
     public DbSet<Animal> Animais { get; set; }
+    public DbSet<Adotante> Adotantes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
