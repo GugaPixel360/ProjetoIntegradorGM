@@ -24,6 +24,28 @@ namespace PiEf.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<bool>("Disponivel")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Especie")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Idade")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Raca")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sexo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.ToTable("Animais");
