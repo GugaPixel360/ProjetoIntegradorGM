@@ -12,3 +12,24 @@ public class Adotante
         Email = email;
     }
 }
+
+// mudar nome dps
+class Crud
+{
+    static List<Adotante> adotantes = new List<Adotante>();
+    static int proximoId = 1;
+    static void ListarAdotantes()
+        {
+            if (adotantes.Count == 0)
+            {
+                Console.WriteLine("Nenhum cliente cadastrado");
+                return;
+            }
+
+            foreach (var a in adotantes)
+            a.();
+        }
+}
+
+
+
