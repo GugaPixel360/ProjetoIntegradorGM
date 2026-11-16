@@ -39,9 +39,17 @@ public class Animal
         return await db.Animais
             .Where(a => a.Disponivel)
             .ToListAsync();
+
     }
 
-    
+    public static async Task CadastrarAnimal(Animal animal)
+    {
+        await using var db = new AppDbContext();
+
+        db.Animais.Add(animal);
+
+        await db.SaveChangesAsync();
+    }
 
 
 
