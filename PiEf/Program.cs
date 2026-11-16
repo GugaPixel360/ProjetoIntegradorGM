@@ -16,24 +16,73 @@ while (true)
     switch (opcao)
     {
         case "1":
-            ListarAdotantes();
-            break;
+    List<Adotante> adotantes = await Adotante.ListarAdotantes();
 
-        case "2":
-            CadastrarAdotante();
-            break;
+    if (adotantes.Count == 0)
+    {
+        Console.WriteLine("Nenhum cliente cadastrado.");
+    }
+    else
+    {
+        Console.WriteLine("\n===== CLIENTES CADASTRADOS =====");
 
-        case "3":
-            ExcluirAdotante();
-            break;
+        foreach (var a in adotantes)
+        {
+            Console.WriteLine(
+                $"ID: {a.Id} | Nome: {a.Nome} | " +
+                $"Idade: {a.Idade} | Email: {a.Email}"
+            );
+        }
+    }
+    break;
 
-        case "4":
-            AtualizarAdotante();
-            break;
+    case "2":
+        Console.Write("Nome: ");
+        string nome = Console.ReadLine()!;
+
+        Console.Write("Idade: ");
+        int idade = int.Parse(Console.ReadLine()!);
+
+        Console.Write("Email: ");
+        string email = Console.ReadLine()!;
+
+        Adotante novoAdotante = new Adotante(nome, idade, email);
+
+        await Adotante.CadastrarAdotante(novoAdotante);
+        Console.WriteLine("Cliente cadastrado com sucesso!");
+        break;
+
+    case "3":
+        Console.Write("Digite o ID do cliente que deseja excluir: ");
+        int idExcluir = int.Parse(Console.ReadLine()!);
+
+        await Adotante.ExcluirAdotante(idExcluir);
+        break;
+
+    case "4":
+        Console.Write("Digite o ID do cliente que deseja atualizar: ");
+        int idAtualizar = int.Parse(Console.ReadLine()!);
+
+        Console.Write("Novo nome: ");
+        string novoNome = Console.ReadLine()!;
+
+        Console.Write("Nova idade: ");
+        int novaIdade = int.Parse(Console.ReadLine()!);
+
+        Console.Write("Novo email: ");
+        string novoEmail = Console.ReadLine()!;
+
+        Adotante adotanteAtualizado = new Adotante(novoNome, novaIdade, novoEmail)
+        {
+            Id = idAtualizar
+        };
+
+        await Adotante.AtualizarAdotante(adotanteAtualizado);
+        break;
 
         case "5":
             Console.Write("Nome: ");
-            string nome = Console.ReadLine()!;
+            string nomeA = Console.ReadLine()!;
 
             Console.Write("Espécie: ");
             string especie = Console.ReadLine()!;
@@ -42,12 +91,12 @@ while (true)
             string raca = Console.ReadLine()!;
 
             Console.Write("Idade: ");
-            int idade = int.Parse(Console.ReadLine()!);
+            int idadeA = int.Parse(Console.ReadLine()!);
 
             Console.Write("Sexo: ");
             string sexo = Console.ReadLine()!;
 
-            Animal novoAnimal = new Animal(nome, especie, raca, idade, sexo);
+            Animal novoAnimal = new Animal(nomeA, especie, raca, idadeA, sexo);
 
             await Animal.CadastrarAnimal(novoAnimal);
 
