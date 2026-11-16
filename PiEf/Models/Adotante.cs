@@ -11,13 +11,12 @@ public class Adotante
         Idade = idade;
         Email = email;
     }
-}
 
-// mudar nome dps
-class Crud
+    class Crud
 {
     static List<Adotante> adotantes = new List<Adotante>();
     static int proximoId = 1;
+
     static void ListarAdotantes()
         {
             if (adotantes.Count == 0)
@@ -29,7 +28,102 @@ class Crud
             foreach (var a in adotantes)
             a.();
         }
+
+        static void CadastrarAdotante()
+        {
+            Console.WriteLine("Digite o nome do cliente:");
+            string nome = Console.ReadLine();
+
+            Console.WriteLine("Digite a idade do cliente:");
+            int idade = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Digite o email do cliente:");
+            string email = Console.ReadLine();
+
+            Adotante adotante = new Adotante(nome, idade, email);
+            adotantes.Add(adotante);
+            proximoId++;
+
+            Console.WriteLine("Cliente cadastrado com sucesso!");
+        }
+
+        static void ExcluirAdotante()
+        {
+            Console.WriteLine("Digite o ID do cliente que deseja excluir:");
+            int id = int.Parse(Console.ReadLine());
+
+            Adotante adotante = adotantes.FirstOrDefault(a => a.Id == id);
+            if (adotante == null)
+            {
+                Console.WriteLine("Cliente não encontrado.");
+                return;
+            }
+
+            adotantes.Remove(adotante);
+            Console.WriteLine("Cliente excluído com sucesso!");
+        }
+
+        static void AtualizarAdotante()
+        {
+            Console.WriteLine("Digite o ID do cliente que deseja atualizar:");
+            int id = int.Parse(Console.ReadLine());
+
+            Adotante adotante = adotantes.FirstOrDefault(a => a.Id == id);
+            if (adotante == null)
+            {
+                Console.WriteLine("Cliente não encontrado.");
+                return;
+            }
+
+            Console.WriteLine("Digite o novo nome do cliente:");
+            adotante.Nome = Console.ReadLine();
+
+            Console.WriteLine("Digite a nova idade do cliente:");
+            adotante.Idade = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Digite o novo email do cliente:");
+            adotante.Email = Console.ReadLine();
+
+            Console.WriteLine("Cliente atualizado com sucesso!");
+        }
+
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                Console.WriteLine("Escolha uma opção:");
+                Console.WriteLine("1 - Listar clientes");
+                Console.WriteLine("2 - Cadastrar cliente");
+                Console.WriteLine("3 - Excluir cliente");
+                Console.WriteLine("4 - Atualizar cliente");
+                Console.WriteLine("0 - Sair");
+
+                string opcao = Console.ReadLine();
+
+                switch (opcao)
+                {
+                    case "1":
+                        ListarAdotantes();
+                        break;
+                    case "2":
+                        CadastrarAdotante();
+                        break;
+                    case "3":
+                        ExcluirAdotante();
+                        break;
+                    case "4":
+                        AtualizarAdotante();
+                        break;
+                    case "0":
+                        return;
+                    default:
+                        Console.WriteLine("Opção inválida.");
+                        break;
+                }
+            }
+        }
 }
 
 
+}
 
