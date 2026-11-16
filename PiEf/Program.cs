@@ -67,7 +67,9 @@ while (true)
                 {
                     Console.WriteLine(
                         $"ID: {animal.Id} | Nome: {animal.Nome} | " +
-                        $"Espécie: {animal.Especie} | Raça: {animal.Raca}"
+                        $"Espécie: {animal.Especie} | Raça: {animal.Raca}" +
+                        $" | Idade: {animal.Idade} | Sexo: {animal.Sexo}" +
+                        $" | Sexo: {animal.Sexo}"
                     );
                 }
             }
