@@ -1,4 +1,5 @@
 ﻿using PiEf.Models;
+Console.Clear();
 
 
 static async Task MenuInicial()
@@ -10,9 +11,9 @@ static async Task MenuInicial()
         Console.WriteLine("2 - Cadastrar cliente");
         Console.WriteLine("3 - Listar clientes");
         Console.WriteLine("0 - Sair");
-        Console.Write("\nEscolha uma opção: ");
+        Console.Write("Escolha uma opção: ");
 
-        string opcao = Console.ReadLine() ?? "";
+        string opcao = Console.ReadLine()?.Trim() ?? "";
 
         switch (opcao)
         {
@@ -25,6 +26,12 @@ static async Task MenuInicial()
 
                 Console.Write("Senha: ");
                 string senha = Console.ReadLine() ?? "";
+
+                if (string.IsNullOrWhiteSpace(senha.Trim()))
+                {
+                    Console.WriteLine("Senha inválida.");
+                    break;
+                }
 
                 Adotante? adotante = await Adotante.Login(email, senha);
 
@@ -48,20 +55,37 @@ static async Task MenuInicial()
 
                 Console.Write("Nome: ");
                 string nome = Console.ReadLine() ?? "";
+                if (string.IsNullOrWhiteSpace(nome.Trim()))
+                {
+                    Console.WriteLine("Nome inválido.");
+                    break;
+                }
 
                 Console.Write("Idade: ");
 
-                if (!int.TryParse(Console.ReadLine(), out int idade) || idade < 0)
+                if (!int.TryParse(Console.ReadLine()?.Replace(" ", ""), out int idade) || idade < 0)
                 {
                     Console.WriteLine("Idade inválida.");
                     break;
                 }
+                
 
                 Console.Write("Email: ");
-                string email = Console.ReadLine() ?? "";
+                string email = Console.ReadLine()?.Replace(" ", "") ?? "";
+                if (!await Adotante.ValidarEmail(email))
+                {
+                    Console.WriteLine("Email inválido.");
+                    break;
+                }
 
                 Console.Write("Senha: ");
-                string senha = Console.ReadLine() ?? "";
+                string senha = Console.ReadLine()?.Replace(" ", "") ?? "";
+                if (!await Adotante.ValidarSenha(senha))
+                {
+                    Console.WriteLine("Senha inválida.");
+                    Console.WriteLine("A senha deve ter pelo menos 6 caracteres, incluindo letras, números e caracteres especiais.");
+                    break;
+                }
 
                 Adotante novoAdotante = new Adotante(nome, idade, email, senha);
 
@@ -122,9 +146,12 @@ static async Task MenuPrincipal()
         Console.WriteLine("4 - Excluir animal");
         Console.WriteLine("5 - Adotar animal");
         Console.WriteLine("6 - Listar adoções");
+        Console.WriteLine("7 - Atualizar clientes");
+        Console.WriteLine("8 - Excluir cliente");
+        Console.WriteLine("9 - Listar clientes");
         Console.WriteLine("0 - Voltar ao menu inicial");
 
-        Console.Write("\nEscolha uma opção: ");
+        Console.Write("Escolha uma opção: ");
         string opcao = Console.ReadLine() ?? "";
 
         switch (opcao)
@@ -134,16 +161,31 @@ static async Task MenuPrincipal()
                 Console.WriteLine("\n===== CADASTRAR ANIMAL =====");
 
                 Console.Write("Nome: ");
-                string nome = Console.ReadLine() ?? "";
+                string nomeC = Console.ReadLine() ?? "";
+                if (string.IsNullOrWhiteSpace(nomeC.Trim()))
+                {
+                    Console.WriteLine("Nome inválido.");
+                    break;
+                }
 
                 Console.Write("Espécie: ");
                 string especie = Console.ReadLine() ?? "";
+                if (string.IsNullOrWhiteSpace(especie.Trim()))
+                {
+                    Console.WriteLine("Espécie inválida.");
+                    break;
+                }
 
                 Console.Write("Raça: ");
                 string raca = Console.ReadLine() ?? "";
+                if (string.IsNullOrWhiteSpace(raca.Trim()))
+                {
+                    Console.WriteLine("Raça inválida.");
+                    break;
+                }
 
                 Console.Write("Idade: ");
-                if (!int.TryParse(Console.ReadLine(), out int idade) || idade < 0)
+                if (!int.TryParse(Console.ReadLine(), out int idadeC) || idadeC < 0)
                 {
                     Console.WriteLine("Idade inválida.");
                     break;
@@ -151,8 +193,13 @@ static async Task MenuPrincipal()
 
                 Console.Write("Sexo: ");
                 string sexo = Console.ReadLine() ?? "";
+                if (string.IsNullOrWhiteSpace(sexo.Trim()))
+                {
+                    Console.WriteLine("Sexo inválido.");
+                    break;
+                }
 
-                Animal novoAnimal = new Animal(nome, especie, raca, idade, sexo);
+                Animal novoAnimal = new Animal(nomeC, especie, raca, idadeC, sexo);
 
                 await Animal.CadastrarAnimal(novoAnimal);
 
@@ -169,8 +216,7 @@ static async Task MenuPrincipal()
                     {
                         Console.WriteLine($"ID: {animal.Id} | Nome: {animal.Nome} | " +
                                           $"Espécie: {animal.Especie} | Raça: {animal.Raca} | " +
-                                          $"Idade: {animal.Idade} | Sexo: {animal.Sexo} | " +
-                                          $"Disponível: {(animal.Disponivel ? "Sim" : "Não")}");
+                                          $"Idade: {animal.Idade} | Sexo: {animal.Sexo} | ");
                     }
                 break;
                 }
@@ -182,14 +228,14 @@ static async Task MenuPrincipal()
                     Console.WriteLine("\n===== ATUALIZAR ANIMAL =====");
 
                     Console.Write("Digite o ID do animal: ");
-                    if (!int.TryParse(Console.ReadLine(), out int id))
+                    if (!int.TryParse(Console.ReadLine(), out int idN))
                     {
                         Console.WriteLine("ID inválido.");
                         break;
                     }
 
                     Console.Write("Novo nome: ");
-                    string nome = Console.ReadLine() ?? "";
+                    string nomeN = Console.ReadLine() ?? "";
 
                     Console.Write("Nova espécie: ");
                     string especie = Console.ReadLine() ?? "";
@@ -198,7 +244,7 @@ static async Task MenuPrincipal()
                     string raca = Console.ReadLine() ?? "";
 
                     Console.Write("Nova idade: ");
-                    if (!int.TryParse(Console.ReadLine(), out int idade) || idade < 0)
+                    if (!int.TryParse(Console.ReadLine(), out int idadeN) || idadeN < 0)
                     {
                         Console.WriteLine("Idade inválida.");
                         break;
@@ -207,9 +253,9 @@ static async Task MenuPrincipal()
                     Console.Write("Novo sexo: ");
                     string sexo = Console.ReadLine() ?? "";
 
-                    Animal animalAtualizado = new Animal(nome, especie, raca, idade, sexo)
+                    Animal animalAtualizado = new Animal(nomeN, especie, raca, idadeN, sexo)
                     {
-                        Id = id
+                        Id = idN
                     };
 
                     await Animal.AtualizarAnimal(animalAtualizado);
@@ -224,33 +270,179 @@ static async Task MenuPrincipal()
                 Console.WriteLine("\n===== EXCLUIR ANIMAL =====");
 
                 Console.Write("Digite o ID do animal que deseja excluir: ");
+                await Animal.ListarAnimaisDisponiveis();
 
-                if (!int.TryParse(Console.ReadLine(), out int id))
+                if (!int.TryParse(Console.ReadLine(), out int idE))
                 {
                     Console.WriteLine("ID inválido.");
                     break;
                 }
 
-                await Animal.ExcluirAnimal(id);
+                await Animal.ExcluirAnimal(idE);
 
                 break;
             }
 
 
             case "5":
-                Console.WriteLine("\nCadastro de adoção ainda não implementado.");
-                break;
+            {
+                Console.WriteLine("\n===== CADASTRAR ADOÇÃO =====");
 
+                Console.Write("ID do cliente: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int idAdotante))
+                {
+                    Console.WriteLine("ID do cliente inválido.");
+                    break;
+                }
+
+                Console.Write("ID do animal: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int idAnimal))
+                {
+                    Console.WriteLine("ID do animal inválido.");
+                    break;
+                }
+
+                await Adocao.CadastrarAdocao(idAdotante, idAnimal);
+
+                break;
+            }
+            
             case "6":
-                Console.WriteLine("\nListagem de adoções ainda não implementada.");
+            {
+                List<Adocao> adocoes = await Adocao.ListarAdocoes();
+
+                if (adocoes.Count == 0)
+                {
+                    Console.WriteLine("\nNenhuma adoção cadastrada.");
+                }
+                else
+                {
+                    Console.WriteLine("\n===== ADOÇÕES CADASTRADAS =====");
+
+                    foreach (var adocao in adocoes)
+                    {
+                        Console.WriteLine(
+                            $"ID da adoção: {adocao.Id} | " +
+                            $"ID do cliente: {adocao.IdAdotante} | " +
+                            $"ID do animal: {adocao.IdAnimal} | " +
+                            $"Data: {adocao.DataAdocao:dd/MM/yyyy HH:mm}"
+                        );
+                    }
+                }
+
+                break;
+            }
+
+            case "7":
+            Console.Write("Digite o ID do cliente que deseja atualizar: ");
+
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.WriteLine("ID inválido!");
+                break;
+            }
+
+            Console.Write("Novo nome: ");
+            string nome = Console.ReadLine() ?? "";
+
+            Console.Write("Nova idade: ");
+            if (!int.TryParse(Console.ReadLine(), out int idade) || idade < 18)
+            {
+                Console.WriteLine("Idade inválida!");
+                break;
+            }
+
+            Console.Write("Novo e-mail: ");
+            string email = Console.ReadLine() ?? "";
+            if (!await Adotante.ValidarEmail(email))
+            {
+                Console.WriteLine("E-mail inválido!");
+                break;
+            }
+
+            Console.Write("Nova senha: ");
+            string senha = Console.ReadLine() ?? "";
+            if (!await Adotante.ValidarSenha(senha))
+            {
+                Console.WriteLine("Senha inválida!");
+                break;
+            }
+
+            Adotante adotanteAtualizado = new Adotante
+            {
+                Id = id,
+                Nome = nome,
+                Idade = idade,
+                Email = email,
+                Senha = senha
+            };
+
+            await Adotante.AtualizarAdotante(adotanteAtualizado);
+            break;
+
+            case "8":
+                List<Adotante> adotantes = await Adotante.ListarAdotantes();
+
+                if (adotantes.Count == 0)
+                {
+                    Console.WriteLine("\nNenhum cliente cadastrado.");
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("\n===== CLIENTES CADASTRADOS =====");
+
+                    foreach (var adotante in adotantes)
+                    {
+                        Console.WriteLine(
+                            $"ID: {adotante.Id} | " +
+                            $"Nome: {adotante.Nome} | " +
+                            $"Idade: {adotante.Idade} | " +
+                            $"E-mail: {adotante.Email}"
+                        );
+                    }
+                }
+                Console.Write("Digite o ID do cliente que deseja excluir: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int idExcluir))
+                {
+                    Console.WriteLine("ID inválido!");
+                    break;
+                }
+
+                await Adotante.ExcluirAdotante(idExcluir);
+                break;
+            
+            case "9":
+                List<Adotante> adotantesL = await Adotante.ListarAdotantes();
+
+                if (adotantesL.Count == 0)
+                {
+                    Console.WriteLine("\nNenhum cliente cadastrado.");
+                }
+                else
+                {
+                    Console.WriteLine("\n===== CLIENTES CADASTRADOS =====");
+
+                    foreach (var adotante in adotantesL)
+                    {
+                        Console.WriteLine(
+                            $"ID: {adotante.Id} | " +
+                            $"Nome: {adotante.Nome} | " +
+                            $"Idade: {adotante.Idade} | " +
+                            $"E-mail: {adotante.Email}"
+                        );
+                    }
+                }
+
                 break;
 
             case "0":
+                Console.WriteLine("Voltando ao menu inicial...");
                 return;
 
-            default:
-                Console.WriteLine("\nOpção inválida.");
-                break;
         }
     }
 }

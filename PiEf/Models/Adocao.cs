@@ -57,4 +57,12 @@ public class Adocao
 
         return true;
     }
+
+    public static async Task<List<Adocao>> ListarAdocoes()
+    {
+        await using var db = new AppDbContext();
+
+        return await db.Adocoes.ToListAsync();
+    }
+
 }

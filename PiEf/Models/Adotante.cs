@@ -90,4 +90,51 @@ public class Adotante
             a => a.Email == email && a.Senha == senha
         );
     }
+
+     public static async Task<bool> ValidarEmail(string email)
+    {
+        string Email = email.Replace(" ", "");
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return false;
+        }
+        string[] arroba =
+        {
+            "@gmail.com",
+            "@hotmail.com",
+            "@outlook.com",
+            "@yahoo.com"
+        };
+ 
+        if (!arroba.Any(a => Email.Contains(a)))
+        {
+            return false;
+        }
+        return true;
+    }
+
+     public static async Task<bool> ValidarSenha(string senha)
+    {
+        if (string.IsNullOrWhiteSpace(senha) || senha.Length < 6)
+        {
+            return false;
+        }
+ 
+        bool letra = senha.Any(c => char.IsLetter(c));
+        bool num = senha.Any(c => char.IsDigit(c));
+        bool carac = senha.Any(c => !char.IsLetterOrDigit(c));
+ 
+        if (senha.Length > 10 || senha.Length < 1)
+        {
+            return false;    
+        }
+           
+           
+        if (!letra && !num && !carac)
+        {      
+            return false;
+        }
+ 
+        return true;
+    }
 }
