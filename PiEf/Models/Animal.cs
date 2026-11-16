@@ -51,9 +51,47 @@ public class Animal
         await db.SaveChangesAsync();
     }
 
+    public static async Task ExcluirAnimal(int id)
+    {
+        await using var db = new AppDbContext();
 
+        var animal = await db.Animais.FindAsync(id);
 
+        if (animal == null)
+        {
+            Console.WriteLine("Animal não encontrado.");
+            return;
+        }
 
+        db.Animais.Remove(animal);
+
+        await db.SaveChangesAsync();
+
+        Console.WriteLine("Animal excluído com sucesso!");
+    }
+
+    public static async Task AtualizarAnimal(Animal animalAtualizado)
+    {
+        await using var db = new AppDbContext();
+
+        var animalExistente = await db.Animais.FindAsync(animalAtualizado.Id);
+
+        if (animalExistente == null)
+        {
+            Console.WriteLine("Animal não encontrado.");
+            return;
+        }
+
+        animalExistente.Nome = animalAtualizado.Nome;
+        animalExistente.Especie = animalAtualizado.Especie;
+        animalExistente.Raca = animalAtualizado.Raca;
+        animalExistente.Idade = animalAtualizado.Idade;
+        animalExistente.Sexo = animalAtualizado.Sexo;
+
+        await db.SaveChangesAsync();
+
+        Console.WriteLine("Animal atualizado com sucesso!");
+    }
 
 
 }

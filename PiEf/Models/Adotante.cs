@@ -10,12 +10,14 @@ public class Adotante
     public string Nome { get; set; } = string.Empty;
     public int Idade { get; set; }
     public string Email { get; set; } = string.Empty;
+    public string Senha { get; set; } = string.Empty;
 
-    public Adotante(string nome, int idade, string email)
+    public Adotante(string nome, int idade, string email, string senha = "")
     {
         Nome = nome;
         Idade = idade;
         Email = email;
+        Senha = senha;
     }
 
     public Adotante() { }
@@ -78,5 +80,14 @@ public class Adotante
         await db.SaveChangesAsync();
 
         Console.WriteLine("Cliente atualizado com sucesso!");
+    }
+
+    public static async Task<Adotante?> Login(string email, string senha)
+    {
+        await using var db = new AppDbContext();
+
+        return await db.Adotantes.FirstOrDefaultAsync(
+            a => a.Email == email && a.Senha == senha
+        );
     }
 }
