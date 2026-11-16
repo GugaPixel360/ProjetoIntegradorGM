@@ -12,12 +12,12 @@ public class Adotante
         Email = email;
     }
 
-    class Crud
+    public static class Crud
 {
-    static List<Adotante> adotantes = new List<Adotante>();
-    static int proximoId = 1;
+    public static List<Adotante> adotantes = new List<Adotante>();
+    public static int proximoId = 1;
 
-    static void ListarAdotantes()
+        public static void ListarAdotantes()
         {
             if (adotantes.Count == 0)
             {
@@ -29,7 +29,7 @@ public class Adotante
             a.();
         }
 
-        static void CadastrarAdotante()
+        public  static void CadastrarAdotante()
         {
             Console.WriteLine("Digite o nome do cliente:");
             string nome = Console.ReadLine();
@@ -47,7 +47,7 @@ public class Adotante
             Console.WriteLine("Cliente cadastrado com sucesso!");
         }
 
-        static void ExcluirAdotante()
+        public static void ExcluirAdotante()
         {
             Console.WriteLine("Digite o ID do cliente que deseja excluir:");
             int id = int.Parse(Console.ReadLine());
@@ -63,7 +63,7 @@ public class Adotante
             Console.WriteLine("Cliente excluído com sucesso!");
         }
 
-        static void AtualizarAdotante()
+        public static void AtualizarAdotante()
         {
             Console.WriteLine("Digite o ID do cliente que deseja atualizar:");
             int id = int.Parse(Console.ReadLine());
