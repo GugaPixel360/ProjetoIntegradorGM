@@ -9,7 +9,6 @@ static async Task MenuInicial()
         Console.WriteLine("\n===== SISTEMA DE ADOÇÃO =====");
         Console.WriteLine("1 - Entrar");
         Console.WriteLine("2 - Cadastrar cliente");
-        Console.WriteLine("3 - Listar clientes");
         Console.WriteLine("0 - Sair");
         Console.Write("Escolha uma opção: ");
 
@@ -99,30 +98,6 @@ static async Task MenuInicial()
                 await Adotante.CadastrarAdotante(novoAdotante);
 
                 Console.WriteLine("\nCliente cadastrado com sucesso!");
-
-                break;
-            }
-
-            case "3":
-            {
-                List<Adotante> adotantes = await Adotante.ListarAdotantes();
-
-                if (adotantes.Count == 0)
-                {
-                    Console.WriteLine("\nNenhum cliente cadastrado.");
-                }
-                else
-                {
-                    Console.WriteLine("\n===== CLIENTES CADASTRADOS =====");
-
-                    foreach (var a in adotantes)
-                    {
-                        Console.WriteLine(
-                            $"ID: {a.Id} | Nome: {a.Nome} | " +
-                            $"Idade: {a.Idade} | Email: {a.Email}"
-                        );
-                    }
-                }
 
                 break;
             }
