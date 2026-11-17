@@ -43,7 +43,14 @@ static async Task MenuInicial()
                 {
                     Console.WriteLine($"\nBem-vindo, {adotante.Nome}!");
 
-                    await MenuPrincipal();
+                    if (adotante.TipoUsuario == "Admin")
+                    {
+                        await MenuAdmin();
+                    }
+                    else
+                    {
+                        await MenuCliente(adotante);
+                    }
                 }
 
                 break;
@@ -135,11 +142,11 @@ static async Task MenuInicial()
 await MenuInicial();
 
 
-static async Task MenuPrincipal()
+static async Task MenuAdmin()
 {
     while (true)
     {
-        Console.WriteLine("\n===== MENU PRINCIPAL =====");
+        Console.WriteLine("\n===== MENU ADMINISTRADOR =====");
         Console.WriteLine("1 - Cadastrar animal");
         Console.WriteLine("2 - Listar animais disponíveis");
         Console.WriteLine("3 - Atualizar animal");
@@ -446,3 +453,155 @@ static async Task MenuPrincipal()
         }
     }
 }
+static async Task MenuCliente(Adotante adotante)
+{
+    while (true)
+    {
+        Console.WriteLine("\n===== MENU DO CLIENTE =====");
+        Console.WriteLine("1 - Listar animais disponíveis");
+        Console.WriteLine("2 - Adotar animal");
+        Console.WriteLine("3 - Atualizar meus dados");
+        Console.WriteLine("4 - Excluir minha conta");
+        Console.WriteLine("0 - Sair da conta");
+
+        Console.Write("Escolha uma opção: ");
+        string opcao = Console.ReadLine() ?? "";
+
+        switch (opcao)
+        {
+            case "1":
+            {
+                List<Animal> animais =
+                    await Animal.ListarAnimaisDisponiveis();
+
+                if (animais.Count == 0)
+                {
+                    Console.WriteLine("Nenhum animal disponível.");
+                    break;
+                }
+
+                foreach (var animal in animais)
+                {
+                    Console.WriteLine(
+                        $"ID: {animal.Id} | Nome: {animal.Nome} | " +
+                        $"Espécie: {animal.Especie} | Raça: {animal.Raca}"
+                    );
+                }
+
+                break;
+            }
+
+            case "2":
+            {
+                Console.Write("Digite o ID do animal que deseja adotar: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int idAnimal))
+                {
+                    Console.WriteLine("ID inválido.");
+                    break;
+                }
+
+                await Adocao.CadastrarAdocao(adotante.Id, idAnimal);
+                break;
+            }
+            case "3":
+            {
+                Console.WriteLine("\n===== ATUALIZAR MEUS DADOS =====");
+
+                Console.Write("Novo nome: ");
+                string nome = Console.ReadLine() ?? "";
+
+                if (string.IsNullOrWhiteSpace(nome))
+                {
+                    Console.WriteLine("Nome inválido.");
+                    break;
+                }
+
+                Console.Write("Nova idade: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int idade) || idade < 18)
+                {
+                    Console.WriteLine("Idade inválida.");
+                    break;
+                }
+
+                Console.Write("Novo email: ");
+                string email = Console.ReadLine()?.Trim() ?? "";
+
+                if (!await Adotante.ValidarEmail(email))
+                {
+                    Console.WriteLine("Email inválido.");
+                    break;
+                }
+
+                Console.Write("Nova senha: ");
+                string senha = Console.ReadLine() ?? "";
+
+                if (!await Adotante.ValidarSenha(senha))
+                {
+                    Console.WriteLine("Senha inválida.");
+                    break;
+                }
+
+                Adotante adotanteAtualizado = new Adotante
+                {
+                    Id = adotante.Id,
+                    Nome = nome,
+                    Idade = idade,
+                    Email = email,
+                    Senha = senha,
+                    TipoUsuario = adotante.TipoUsuario
+                };
+
+                await Adotante.AtualizarAdotante(adotanteAtualizado);
+
+                Console.WriteLine("Dados atualizados com sucesso!");
+
+                adotante.Nome = nome;
+                adotante.Idade = idade;
+                adotante.Email = email;
+                adotante.Senha = senha;
+
+                break;
+            }
+
+
+            case "4":
+            {
+                Console.WriteLine("\n===== EXCLUIR MINHA CONTA =====");
+                Console.Write("Tem certeza que deseja excluir sua conta? (s/n): ");
+
+                string confirmacao = Console.ReadLine()?.Trim().ToLower() ?? "";
+
+                if (confirmacao == "s")
+                {
+                    await Adotante.ExcluirAdotante(adotante.Id);
+
+                    Console.WriteLine("Conta excluída!");
+                    return;
+                }
+                if (confirmacao == "n")
+                {
+                    Console.WriteLine("Exclusão cancelada.");
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida.");
+                    return;
+                }
+
+                break;
+            }
+
+
+            case "0":
+                Console.WriteLine("Saindo da conta...");
+                return;
+
+            default:
+                Console.WriteLine("Opção inválida.");
+                break;
+        }
+    }
+}   
+

@@ -11,6 +11,7 @@ public class Adotante
     public int Idade { get; set; }
     public string Email { get; set; } = string.Empty;
     public string Senha { get; set; } = string.Empty;
+    public string TipoUsuario { get; set; } = "Cliente";
 
     public Adotante(string nome, int idade, string email, string senha = "")
     {

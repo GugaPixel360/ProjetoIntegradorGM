@@ -10,19 +10,12 @@ namespace PiEf.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Senha",
-                table: "Adotantes",
-                type: "longtext",
-                nullable: false);
+        // A coluna Senha já existe no banco.
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Senha",
-                table: "Adotantes");
+        // Não remover a coluna existente.
         }
     }
 }
