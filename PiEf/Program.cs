@@ -451,12 +451,14 @@ static async Task MenuCliente(Adotante adotante)
 
                 if (animais.Count == 0)
                 {
+                    Console.WriteLine(" ");
                     Console.WriteLine("Nenhum animal disponível.");
                     break;
                 }
 
                 foreach (var animal in animais)
                 {
+                    Console.WriteLine(" ");
                     Console.WriteLine(
                         $"ID: {animal.Id} | Nome: {animal.Nome} | " +
                         $"Espécie: {animal.Especie} | Raça: {animal.Raca}"
@@ -468,6 +470,24 @@ static async Task MenuCliente(Adotante adotante)
 
             case "2":
             {
+                List<Animal> animais = await Animal.ListarAnimaisDisponiveis();
+
+                if (animais.Count == 0)
+                {
+                    Console.WriteLine(" ");
+                    Console.WriteLine("Nenhum animal disponível.");
+                    break;
+                }
+
+                foreach (var animal in animais)
+                {
+                    Console.WriteLine(" ");
+                    Console.WriteLine(
+                        $"ID: {animal.Id} | Nome: {animal.Nome} | " +
+                        $"Espécie: {animal.Especie} | Raça: {animal.Raca}"
+                    );
+                }
+
                 Console.Write("Digite o ID do animal que deseja adotar: ");
 
                 if (!int.TryParse(Console.ReadLine(), out int idAnimal))
