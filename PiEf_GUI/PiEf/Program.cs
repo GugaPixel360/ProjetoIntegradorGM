@@ -1,14 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using PiEf.Data;
 using PiEf.Models;
+using PiEf.Services;
 using PiEf.UI;
 
 namespace PiEf;
 
 internal static class Program
 {
-    /// <summary>
-    /// Ponto de entrada da aplicação gráfica.
-    /// O menu de console original foi preservado em Legacy/ProgramConsole.cs.txt.
-    /// </summary>
     [STAThread]
     private static void Main()
     {
@@ -16,7 +15,19 @@ internal static class Program
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 
-        // Ciclo: Login -> Sistema -> (Sair da conta) -> Login ... sem reiniciar o programa.
+        // Cria o banco e as tabelas automaticamente, se ainda não existirem.
+        try
+        {
+            using var db = new AppDbContext();
+            db.Database.Migrate();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(Mensagens.DeErro(ex), "Banco de dados",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
         while (true)
         {
             Adotante? usuario;
@@ -28,7 +39,7 @@ internal static class Program
             }
 
             if (usuario == null)
-                break; // janela de login fechada no "X": encerra o sistema
+                break;
 
             bool encerrarPrograma;
 
@@ -39,7 +50,7 @@ internal static class Program
             }
 
             if (encerrarPrograma)
-                break; // janela principal fechada no "X": encerra o sistema
+                break;
         }
     }
 }
