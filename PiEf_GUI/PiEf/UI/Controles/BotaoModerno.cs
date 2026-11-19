@@ -23,7 +23,7 @@ public class BotaoModerno : Button
 
     public BotaoModerno()
     {
-        SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInPaintEvent |
+        SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
                  ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
         FlatStyle = FlatStyle.Flat;
         FlatAppearance.BorderSize = 0;

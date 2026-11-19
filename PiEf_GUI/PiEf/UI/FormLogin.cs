@@ -70,15 +70,18 @@ public sealed class FormLogin : Form
             Size = new Size(90, 80)
         });
 
-        _esquerda.Controls.Add(new Label
+        foreach ((string linha, int y) in new[] { ("Sistema de", 276), ("Adoção", 334) })
         {
-            Text = "Sistema de Adoção",
-            Font = Tema.TituloGrande,
-            ForeColor = Color.White,
-            AutoSize = false,
-            Location = new Point(44, 280),
-            Size = new Size(350, 100)
-        });
+            _esquerda.Controls.Add(new Label
+            {
+                Text = linha,
+                Font = Tema.TituloGrande,
+                ForeColor = Color.White,
+                AutoSize = false,
+                Location = new Point(44, y),
+                Size = new Size(360, 56)
+            });
+        }
 
         _esquerda.Controls.Add(new Label
         {
@@ -86,8 +89,8 @@ public sealed class FormLogin : Form
             Font = Tema.Subtitulo,
             ForeColor = Tema.Hex("#A9C7CB"),
             AutoSize = false,
-            Location = new Point(46, 388),
-            Size = new Size(320, 80)
+            Location = new Point(46, 412),
+            Size = new Size(330, 90)
         });
     }
 
