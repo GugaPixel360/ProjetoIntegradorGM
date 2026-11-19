@@ -49,6 +49,27 @@ public static class ConsultaService
             .ToList();
     }
 
+    public static async Task<List<AdocaoLinha>> ListarAdocoesDoCliente(int idCliente)
+    {
+        List<Adocao> adocoes = (await Adocao.ListarAdocoes())
+            .Where(a => a.IdAdotante == idCliente)
+            .OrderByDescending(a => a.DataAdocao)
+            .ToList();
+        Dictionary<int, Animal> animais = (await ListarTodosAnimais()).ToDictionary(a => a.Id);
+
+        return adocoes
+            .Select(a => new AdocaoLinha
+            {
+                Id = a.Id,
+                Data = a.DataAdocao,
+                IdCliente = a.IdAdotante,
+                Cliente = string.Empty,
+                IdAnimal = a.IdAnimal,
+                Animal = animais.TryGetValue(a.IdAnimal, out var animal) ? animal.Nome : "(removido)"
+            })
+            .ToList();
+    }
+
     public static async Task<ResumoPainel> ObterResumo()
     {
         int disponiveis = (await Animal.ListarAnimaisDisponiveis()).Count;

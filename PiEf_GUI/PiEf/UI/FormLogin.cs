@@ -242,13 +242,28 @@ public sealed class FormLogin : Form
 
         try
         {
-            var dados = await Formularios.LerCliente(_cadNome, _cadIdade, _cadEmail, Validacao.IdadeMinimaCadastro);
+            var dados = await Formularios.LerCliente(
+                _cadNome, _cadIdade, _cadEmail,
+                Validacao.IdadeMinimaCadastro
+            );
+
+            if (dados == null)
+                return;
+
+            // Validar nome
+            if (!Adotante.ValidarNome(dados.Value.Nome))
+            {
+                _cadNome.MostrarErro("O nome não pode conter números.");
+                return;
+            }
 
             string senha = _cadSenha.Texto.Replace(" ", "");
             string? erroSenha = await Validacao.SenhaAsync(senha);
-            if (erroSenha != null) _cadSenha.MostrarErro(erroSenha);
 
-            if (dados == null || erroSenha != null)
+            if (erroSenha != null)
+                _cadSenha.MostrarErro(erroSenha);
+
+            if (erroSenha != null)
                 return;
 
             var novo = new Adotante(dados.Value.Nome, dados.Value.Idade, dados.Value.Email, senha);

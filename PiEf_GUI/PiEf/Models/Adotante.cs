@@ -138,4 +138,19 @@ public class Adotante
  
         return true;
     }
+
+    public static bool ValidarNome(string nome)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+            return false;
+
+        string nomeLimpo = nome.Trim();
+
+        return nomeLimpo.Any(char.IsLetter) &&
+            nomeLimpo.All(c =>
+                char.IsLetter(c) ||
+                char.IsWhiteSpace(c) ||
+                c == '-' ||
+                c == '\'');
+    }
 }

@@ -125,6 +125,7 @@ public sealed class FormPrincipal : Form
         else
         {
             AdicionarItem("Animais disponíveis", Icones.Animais, () => new TelaAnimais(_usuario));
+            AdicionarItem("Minhas adoções", Icones.Adocoes, () => new TelaMinhasAdocoes(_usuario));
             AdicionarItem("Minha conta", Icones.Usuario, CriarTelaMinhaConta);
         }
 
