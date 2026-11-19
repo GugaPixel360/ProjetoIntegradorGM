@@ -1,6 +1,7 @@
 using PiEf.Models;
 using Microsoft.EntityFrameworkCore;
 
+namespace PiEf.Data;
 
 public class AppDbContext : DbContext
 {
