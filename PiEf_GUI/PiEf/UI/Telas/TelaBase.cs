@@ -42,12 +42,20 @@ public abstract class TelaBase : UserControl
     }
 
     /// <summary>Barra superior com busca à esquerda e botões à direita.</summary>
+     /// <summary>Barra superior com busca à esquerda e botões à direita.</summary>
     protected static Panel CriarBarra(Control busca, out FlowLayoutPanel acoes)
     {
         var barra = new Panel { Dock = DockStyle.Top, Height = 62, BackColor = Tema.Fundo };
 
-        busca.Dock = DockStyle.Left;
-        busca.Width = 320;
+        // A busca ocupa o espaço que sobra, com 10 px de folga em cima e embaixo (altura final de 42 px).
+        var areaBusca = new Panel
+        {
+            Dock = DockStyle.Fill,
+            BackColor = Tema.Fundo,
+            Padding = new Padding(0, 10, 16, 10)
+        };
+        busca.Dock = DockStyle.Fill;
+        areaBusca.Controls.Add(busca);
 
         acoes = new FlowLayoutPanel
         {
@@ -56,12 +64,11 @@ public abstract class TelaBase : UserControl
             AutoSizeMode = AutoSizeMode.GrowAndShrink,
             FlowDirection = FlowDirection.LeftToRight,
             WrapContents = false,
-            BackColor = Tema.Fundo,
-            Padding = new Padding(0, 0, 0, 0)
+            BackColor = Tema.Fundo
         };
 
-        barra.Controls.Add(acoes);
-        barra.Controls.Add(busca);
+        barra.Controls.Add(areaBusca); // Fill primeiro
+        barra.Controls.Add(acoes);     // depois o Right
         return barra;
     }
 

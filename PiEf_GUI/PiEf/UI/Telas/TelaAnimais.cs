@@ -60,10 +60,10 @@ public sealed class TelaAnimais : TelaBase
         _busca.Dica = "Buscar por nome, espécie ou raça";
         _busca.TextoAlterado += (_, _) => AplicarFiltro();
 
-        _btnNovo = Botao("Novo animal", Icones.Novo, EstiloBotao.Primario, 150);
-        _btnEditar = Botao("Editar", Icones.Editar, EstiloBotao.Secundario, 110);
-        _btnExcluir = Botao("Excluir", Icones.Excluir, EstiloBotao.Perigo, 110);
-        _btnAdotar = Botao("Adotar", Icones.Adocoes, _admin ? EstiloBotao.Secundario : EstiloBotao.Primario, 120);
+        _btnNovo = Botao("Novo animal", Icones.Novo, EstiloBotao.Primario, 140);
+        _btnEditar = Botao("Editar", Icones.Editar, EstiloBotao.Secundario, 100);
+        _btnExcluir = Botao("Excluir", Icones.Excluir, EstiloBotao.Perigo, 100);
+        _btnAdotar = Botao("Adotar", Icones.Adocoes, _admin ? EstiloBotao.Secundario : EstiloBotao.Primario, 110);
 
         _btnNovo.Click += async (_, _) => await NovoAsync();
         _btnEditar.Click += async (_, _) => await EditarAsync();
@@ -74,6 +74,8 @@ public sealed class TelaAnimais : TelaBase
 
         if (_admin)
         {
+            // Mantém o filtro fora da linha dos botões para que ele não comprima a busca.
+            barra.Height = 92;
             _mostrarTodos.Text = "Incluir adotados";
             _mostrarTodos.Font = Tema.Normal;
             _mostrarTodos.ForeColor = Tema.Texto;
