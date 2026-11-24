@@ -24,6 +24,7 @@ public class Campo : UserControl
     private bool _foco;
     private bool _temErro;
     private string _ajuda = string.Empty;
+    private readonly Label _icone = new();
 
     public Campo()
     {
@@ -33,6 +34,11 @@ public class Campo : UserControl
         _rotulo.AutoSize = false;
         _rotulo.Font = Tema.Negrito;
         _rotulo.ForeColor = Tema.Texto;
+        _icone.AutoSize = false;
+        _icone.Font = Tema.Icone;
+        _icone.ForeColor = Tema.Primaria;
+        _icone.TextAlign = ContentAlignment.MiddleLeft;
+        _icone.Visible = false;
 
         _caixa.BackColor = Color.White;
         _caixa.Paint += DesenharCaixa;
@@ -59,6 +65,7 @@ public class Campo : UserControl
         Controls.Add(_caixa);
         Controls.Add(_combo);
         Controls.Add(_rodape);
+        Controls.Add(_icone);
 
         Resize += (_, _) => Disposicao();
         Disposicao();
@@ -66,7 +73,12 @@ public class Campo : UserControl
     }
 
     public string Rotulo { get => _rotulo.Text; set => _rotulo.Text = value; }
-
+        /// <summary>Ícone opcional exibido ao lado do rótulo.</summary>
+    public string Icone
+    {
+        get => _icone.Text;
+        set { _icone.Text = value; _icone.Visible = !string.IsNullOrEmpty(value); Disposicao(); }
+    }
     public string Texto
     {
         get => _combo.Visible ? _combo.Text : _texto.Text;
@@ -135,7 +147,9 @@ public class Campo : UserControl
     private void Disposicao()
     {
         int w = Width;
-        _rotulo.SetBounds(0, 0, w, 20);
+        int recuo = _icone.Visible ? 28 : 0;
+        _icone.SetBounds(0, 0, 26, 20);
+        _rotulo.SetBounds(recuo, 0, w - recuo, 20);
         _caixa.SetBounds(0, 22, w, 42);
         _texto.Width = w - 24;
         _texto.Location = new Point(12, Math.Max(0, (_caixa.Height - _texto.Height) / 2));

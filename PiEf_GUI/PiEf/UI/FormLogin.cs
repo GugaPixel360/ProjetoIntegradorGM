@@ -4,24 +4,32 @@ using PiEf.Models;
 using PiEf.Services;
 using PiEf.UI.Controles;
 using PiEf.UI.Dialogos;
+using System.Drawing.Drawing2D;
 
 namespace PiEf.UI;
 
 /// <summary>Tela inicial: entrar ou criar conta de cliente (equivale ao menu inicial do console).</summary>
 public sealed class FormLogin : Form
 {
-    private readonly Panel _direita = new() { Dock = DockStyle.Fill, BackColor = Color.White };
-    private readonly Panel _painelLogin = new() { Size = new Size(400, 430), BackColor = Color.White };
-    private readonly Panel _painelCadastro = new() { Size = new Size(400, 580), BackColor = Color.White };
+        // Identidade visual desta tela
+    private static readonly Color FundoDireita = Tema.Hex("#F4F6F7");
+    private static readonly Color TextoPrincipal = Tema.Hex("#263238");
+    private static readonly Color TextoSecundario = Tema.Hex("#7B898D");
+    private static readonly Font FonteTitulo = new("Segoe UI", 22f, FontStyle.Bold);
+    private static readonly Font FonteTituloEsquerda = new("Segoe UI", 26f, FontStyle.Bold);
 
-    private readonly Campo _loginEmail = new() { Rotulo = "E-mail", Dica = "seuemail@gmail.com" };
-    private readonly Campo _loginSenha = new() { Rotulo = "Senha", Senha = true };
+    private readonly PainelSuave _direita = new() { Dock = DockStyle.Fill, BackColor = FundoDireita, AutoScroll = true };
+    private readonly Panel _painelLogin = new() { Size = new Size(400, 430), BackColor = FundoDireita };
+    private readonly Panel _painelCadastro = new() { Size = new Size(400, 580), BackColor = FundoDireita };
+
+    private readonly Campo _loginEmail = new() { Rotulo = "E-mail", Icone = Icones.Email };
+    private readonly Campo _loginSenha = new() { Rotulo = "Senha", Senha = true, Icone = Icones.Cadeado };
     private readonly Campo _cadNome = new() { Rotulo = "Nome completo" };
     private readonly Campo _cadIdade = new() { Rotulo = "Idade" };
-    private readonly Campo _cadEmail = new() { Rotulo = "E-mail", Dica = "seuemail@gmail.com" };
-    private readonly Campo _cadSenha = new() { Rotulo = "Senha", Senha = true, Ajuda = "Use de 6 a 10 caracteres." };
+    private readonly Campo _cadEmail = new() { Rotulo = "E-mail", Icone = Icones.Email };
+    private readonly Campo _cadSenha = new() { Rotulo = "Senha", Senha = true, Icone = Icones.Cadeado, Ajuda = "Use de 6 a 10 caracteres." };
 
-    private readonly BotaoModerno _btnEntrar = new() { Text = "Entrar", Size = new Size(400, 46) };
+    private readonly BotaoModerno _btnEntrar = new() { Text = "Entrar  →", Size = new Size(400, 46) };
     private readonly BotaoModerno _btnCriar = new() { Text = "Criar conta", Size = new Size(400, 46) };
 
     /// <summary>Preenchido quando o login é bem-sucedido.</summary>
@@ -46,6 +54,10 @@ public sealed class FormLogin : Form
         _direita.Controls.Add(_painelLogin);
         _direita.Controls.Add(_painelCadastro);
         _direita.Resize += (_, _) => Centralizar();
+        _direita.Paint += (_, e) => DesenharDireita(e.Graphics, _direita.ClientSize);
+
+        foreach (Campo c in new[] { _loginEmail, _loginSenha, _cadNome, _cadIdade, _cadEmail, _cadSenha })
+            c.BackColor = FundoDireita;
 
         Controls.Add(_direita);
         // O lado esquerdo é adicionado depois por ser Dock Left (Fill vem primeiro).
@@ -59,12 +71,14 @@ public sealed class FormLogin : Form
     private void ConstruirLadoEsquerdo()
     {
         _esquerda = new PainelSuave { Dock = DockStyle.Left, Width = 420, BackColor = Tema.Sidebar };
+        _esquerda.Paint += (_, e) => DesenharEsquerda(e.Graphics, _esquerda.ClientSize);
 
         _esquerda.Controls.Add(new Label
         {
             Text = Icones.Animais,
             Font = Tema.IconeGrande,
             ForeColor = Tema.Destaque,
+            BackColor = Color.Transparent,
             AutoSize = false,
             Location = new Point(44, 190),
             Size = new Size(90, 80)
@@ -75,8 +89,9 @@ public sealed class FormLogin : Form
             _esquerda.Controls.Add(new Label
             {
                 Text = linha,
-                Font = Tema.TituloGrande,
+                Font = FonteTituloEsquerda,
                 ForeColor = Color.White,
+                BackColor = Color.Transparent,
                 AutoSize = false,
                 Location = new Point(44, y),
                 Size = new Size(360, 56)
@@ -87,7 +102,8 @@ public sealed class FormLogin : Form
         {
             Text = "Cadastre animais, acompanhe adoções e ajude cada um a encontrar um novo lar.",
             Font = Tema.Subtitulo,
-            ForeColor = Tema.Hex("#A9C7CB"),
+            ForeColor = Tema.Hex("#D5E6E8"),
+            BackColor = Color.Transparent,
             AutoSize = false,
             Location = new Point(46, 412),
             Size = new Size(330, 90)
@@ -111,7 +127,7 @@ public sealed class FormLogin : Form
         painel.Controls.Add(campo);
     }
 
-    private LinkLabel CriarLink(string texto, int y, EventHandler aoClicar)
+    private LinkLabel CriarLink(string texto, int y, EventHandler aoClicar, string? destaque = null)
     {
         var link = new LinkLabel
         {
@@ -119,6 +135,7 @@ public sealed class FormLogin : Form
             Font = Tema.Normal,
             AutoSize = false,
             TextAlign = ContentAlignment.MiddleCenter,
+            ForeColor = TextoPrincipal,
             LinkColor = Tema.Primaria,
             ActiveLinkColor = Tema.PrimariaEscura,
             VisitedLinkColor = Tema.Primaria,
@@ -127,14 +144,23 @@ public sealed class FormLogin : Form
             Size = new Size(400, 28),
             Cursor = Cursors.Hand
         };
+
+        // Só a palavra de destaque vira link (turquesa); o resto do texto fica em cor normal.
+        if (destaque != null)
+        {
+            int inicio = texto.IndexOf(destaque, StringComparison.Ordinal);
+            if (inicio >= 0)
+                link.LinkArea = new LinkArea(inicio, destaque.Length);
+        }
+
         link.Click += aoClicar;
         return link;
     }
 
     private void ConstruirPainelLogin()
     {
-        _painelLogin.Controls.Add(CriarTexto("Bem-vindo de volta", Tema.Titulo, Tema.Texto, 0, 42));
-        _painelLogin.Controls.Add(CriarTexto("Entre com seu e-mail e senha.", Tema.Subtitulo, Tema.TextoSuave, 46, 26));
+        _painelLogin.Controls.Add(CriarTexto("Bem-vindo de volta", FonteTitulo, TextoPrincipal, 0, 42));
+        _painelLogin.Controls.Add(CriarTexto("Entre com seu e-mail e senha.", Tema.Subtitulo, TextoSecundario, 46, 26));
 
         Posicionar(_painelLogin, _loginEmail, 104);
         Posicionar(_painelLogin, _loginSenha, 196);
@@ -143,13 +169,13 @@ public sealed class FormLogin : Form
         _btnEntrar.Click += async (_, _) => await EntrarAsync();
         _painelLogin.Controls.Add(_btnEntrar);
 
-        _painelLogin.Controls.Add(CriarLink("Ainda não tem conta? Cadastre-se", 368, (_, _) => MostrarCadastro()));
+        _painelLogin.Controls.Add(CriarLink("Ainda não tem conta? Cadastre-se", 368, (_, _) => MostrarCadastro(), "Cadastre-se"));
     }
 
     private void ConstruirPainelCadastro()
     {
-        _painelCadastro.Controls.Add(CriarTexto("Criar conta", Tema.Titulo, Tema.Texto, 0, 42));
-        _painelCadastro.Controls.Add(CriarTexto("Cadastre-se como cliente para adotar um animal.", Tema.Subtitulo, Tema.TextoSuave, 46, 26));
+        _painelCadastro.Controls.Add(CriarTexto("Criar conta", FonteTitulo, TextoPrincipal, 0, 42));
+        _painelCadastro.Controls.Add(CriarTexto("Cadastre-se como cliente para adotar um animal.", Tema.Subtitulo, TextoSecundario, 46, 26));
 
         Posicionar(_painelCadastro, _cadNome, 100);
         Posicionar(_painelCadastro, _cadIdade, 190);
@@ -160,7 +186,47 @@ public sealed class FormLogin : Form
         _btnCriar.Click += async (_, _) => await CadastrarAsync();
         _painelCadastro.Controls.Add(_btnCriar);
 
-        _painelCadastro.Controls.Add(CriarLink("Já tenho conta. Entrar", 538, (_, _) => MostrarLogin()));
+        _painelCadastro.Controls.Add(CriarLink("Já tenho conta. Entrar", 538, (_, _) => MostrarLogin(), "Entrar"));
+    }
+
+    private void DesenharEsquerda(Graphics g, Size area)
+    {
+        g.SmoothingMode = SmoothingMode.AntiAlias;
+        float w = area.Width, h = area.Height, s = DeviceDpi / 96f;
+
+        // Formas suaves ao fundo (um tom de teal mais claro, bem transparente)
+        Decoracao.Elipse(g, w * 0.10f, h * 1.02f, w * 0.95f, h * 0.38f, Color.FromArgb(26, 110, 190, 185));
+        Decoracao.Elipse(g, w * 1.00f, h * 1.00f, w * 0.40f, h * 0.22f, Color.FromArgb(40, 110, 190, 185));
+
+        // Patinhas grandes no canto superior direito, bem sutis
+        Color patinha = Color.FromArgb(55, 110, 190, 190);
+        Decoracao.Patinha(g, w * 0.86f, h * 0.20f, w * 0.34f, 14f, patinha);
+        Decoracao.Patinha(g, w * 0.70f, h * 0.085f, w * 0.20f, -18f, patinha);
+
+        // Cachorro e gato, só o contorno, na parte de baixo
+        Color traco = Color.FromArgb(60, 140, 215, 210);
+        Decoracao.Cachorro(g, w * 0.03f, h * 0.74f, w * 0.36f, traco, 3f * s);
+        Decoracao.Gato(g, w * 0.46f, h * 0.78f, w * 0.36f, traco, 3f * s);
+    }
+
+    private void DesenharDireita(Graphics g, Size area)
+    {
+        // No cadastro o formulário ocupa quase a altura toda; sem decoração para não haver cortes.
+        if (!_painelLogin.Visible) return;
+
+        g.SmoothingMode = SmoothingMode.AntiAlias;
+        float w = area.Width, h = area.Height;
+
+        Color forma = Tema.Hex("#E3ECEF");
+        Color patinha = Tema.Hex("#C9DADF");
+
+        // Canto superior direito
+        Decoracao.Elipse(g, w, 0f, w * 0.30f, h * 0.14f, forma);
+        Decoracao.Patinha(g, w * 0.90f, h * 0.085f, w * 0.16f, 15f, patinha);
+
+        // Canto inferior direito
+        Decoracao.Elipse(g, w, h, w * 0.34f, h * 0.15f, forma);
+        Decoracao.Patinha(g, w * 0.88f, h * 0.93f, w * 0.16f, -12f, patinha);
     }
 
     private void Centralizar()
@@ -174,6 +240,7 @@ public sealed class FormLogin : Form
         _painelCadastro.Visible = false;
         _painelLogin.Visible = true;
         AcceptButton = _btnEntrar;
+        _direita.Invalidate();
         _loginEmail.FocarCampo();
     }
 
@@ -182,6 +249,7 @@ public sealed class FormLogin : Form
         _painelLogin.Visible = false;
         _painelCadastro.Visible = true;
         AcceptButton = _btnCriar;
+        _direita.Invalidate();
         _cadNome.FocarCampo();
     }
 

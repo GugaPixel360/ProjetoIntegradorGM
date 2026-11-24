@@ -136,4 +136,6 @@ public static class Icones
     public const string Sucesso = "\u2714";
     public const string Aviso = "\u26A0";
     public const string Info = "\u2139";
+    public const string Email = "\u2709";
+    public const string Cadeado = "\U0001F512";
 }
