@@ -34,6 +34,7 @@ VALUES
 ('Tico', 'Pássaro', 'Periquito', 2, 'Macho', 1),
 ('Maya', 'Cachorro', 'Chihuahua', 1, 'Fêmea', 1),
 ('Bruce', 'Cachorro', 'Boxer', 8, 'Macho', 1);
+ 
 
 // Clientes
 
@@ -70,4 +71,5 @@ VALUES
 ('Leticia Vieira', 28, 'leticia.vieira27@gmail.com', 'Cliente', 'cliente123'),
 ('Joao Pedro Lopes', 18, 'joao.lopes28@gmail.com', 'Cliente', 'cliente123'),
 ('Alice Mendes', 25, 'alice.mendes29@gmail.com', 'Cliente', 'cliente123'),
-('Gustavo Silva Madureira', 18, 'gmadureira198@gmail.com', 'Admin', '210710');
+('Gustavo Silva Madureira', 18, 'gmadureira198@gmail.com', 'Admin', '210710'),
+('ClienteTeste', 18, 'CT@gmail.com', 'Cliente', '210710');
