@@ -15,11 +15,10 @@ public static class Operacoes
 
     public static async Task<Resultado> AtualizarAnimalAsync(Animal dados)
     {
-        await using (var db = new AppDbContext())
-        {
-            if (!await db.Animais.AnyAsync(a => a.Id == dados.Id))
-                return Resultado.Falha("Animal não encontrado.");
-        }
+        string? erro = await Validacao.AnimalEditavelAsync(dados.Id);
+
+        if (erro != null)
+            return Resultado.Falha(erro);
 
         await Animal.AtualizarAnimal(dados);
         return Resultado.Ok("Animal atualizado com sucesso!");

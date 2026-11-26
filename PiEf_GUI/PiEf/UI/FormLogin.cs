@@ -318,7 +318,7 @@ public sealed class FormLogin : Form
             if (dados == null)
                 return;
 
-            // Validar nome
+            
             if (!Adotante.ValidarNome(dados.Value.Nome))
             {
                 _cadNome.MostrarErro("O nome não pode conter números.");

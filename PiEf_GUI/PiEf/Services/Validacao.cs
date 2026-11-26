@@ -1,4 +1,6 @@
 using PiEf.Models;
+using Microsoft.EntityFrameworkCore;
+using PiEf.Data;
 
 namespace PiEf.Services;
 
@@ -42,7 +44,7 @@ public static class Validacao
 
         return await Adotante.ValidarEmail(email)
             ? null
-            : "E-mail inválido. Use @gmail.com, @hotmail.com, @outlook.com ou @yahoo.com.";
+            : "E-mail inválido. Use gmail, hotmail, outlook ou yahoo.";
     }
 
     public static async Task<string?> SenhaAsync(string senha)
@@ -53,5 +55,21 @@ public static class Validacao
         return await Adotante.ValidarSenha(senha)
             ? null
             : "Senha inválida. Use de 6 a 10 caracteres.";
+    }
+       
+    public static async Task<string?> AnimalEditavelAsync(int idAnimal)
+    {
+        await using var db = new AppDbContext();
+
+        Animal? animal = await db.Animais.FindAsync(idAnimal);
+
+        if (animal == null)
+            return "Animal não encontrado.";
+
+        bool adotado = !animal.Disponivel || await db.Adocoes.AnyAsync(a => a.IdAnimal == idAnimal);
+
+        return adotado
+            ? "Este animal já foi adotado e não pode ter os dados alterados."
+            : null;
     }
 }
